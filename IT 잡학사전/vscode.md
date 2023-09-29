@@ -1,8 +1,10 @@
 # Visual Studio Code 공식문서
 
-## Getting Started with Python in VS Code
 
-- 파이썬 프로젝트 세팅 과정 기록
+## Getting Started with Python in VS Code
+- [원본 글 링크](https://code.visualstudio.com/docs/python/python-tutorial)
+- 프로젝트 세팅 과정 중 필요한 부분만 따로 정리
+
 
 ### Prerequisites
 
@@ -26,6 +28,5 @@
       - 이미 설치해둔 것 중에 선택!
         ![인터프리터 선택](../images/interpreter-select.JPG)
 
-### Create a Python source code file
-
--
+### Configure and run the debugger
+- 참고: VS Code는 모든 configurations에 JSON 파일들을 사용한다; launch.json은 debugging configuration을 포함하는 파일의 표준 이름이다.

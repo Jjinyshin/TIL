@@ -52,12 +52,24 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request){
+        String readSql = "SELECT * FROM user WHERE id = ?";
+        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, request.getId()).isEmpty(); // : 조회sql, 결과가 있으면 무조건 0 반환, ? 값; 이 문장의 리턴값은 리스트임. query가 반환된 값들을 리스트로 감싸줌. 따라서 조회 결과가 null이면 empty list가 반환될 것임.
+        if (isUserNotExist) {
+            throw new IllegalArgumentException(); // 500 error 반환.
+        }
+
         String sql = "UPDATE user SET name = ? WHERE id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getId());
     }
 
     @DeleteMapping("/user")
-    public void deleteUser(@RequestParam String name) { // 바디를 쓰지 않고 쿼리를 사용함. 객체를 사용할 수도 있지만, 변수가 1개이기 때문에 간단하게 쿼리파라미터로 받음.
+    public void deleteUser(@RequestParam String name) {
+        String readSql = "SELECT * FROM user WHERE name = ?";
+        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, name).isEmpty();
+        if (isUserNotExist) {
+            throw new IllegalArgumentException(); // 500 error 반환.
+        }
+
         String sql = "DELETE FROM user WHERE name = ?";
         jdbcTemplate.update(sql, name);
     }

@@ -4,6 +4,7 @@ import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.dto.user.request.UserCreateRequest;
 import com.group.libraryapp.dto.user.request.UserUpdateRequest;
 import com.group.libraryapp.dto.user.response.UserResponse;
+import com.group.libraryapp.service.user.UserService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,8 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    // jdbc == java database connector
+
+    private final UserService userService = new UserService();
     private final JdbcTemplate jdbcTemplate;
 
     public UserController(JdbcTemplate jdbcTemplate) {
@@ -52,14 +54,7 @@ public class UserController {
 
     @PutMapping("/user")
     public void updateUser(@RequestBody UserUpdateRequest request){
-        String readSql = "SELECT * FROM user WHERE id = ?";
-        boolean isUserNotExist = jdbcTemplate.query(readSql, (rs, rowNum) -> 0, request.getId()).isEmpty(); // : 조회sql, 결과가 있으면 무조건 0 반환, ? 값; 이 문장의 리턴값은 리스트임. query가 반환된 값들을 리스트로 감싸줌. 따라서 조회 결과가 null이면 empty list가 반환될 것임.
-        if (isUserNotExist) {
-            throw new IllegalArgumentException(); // 500 error 반환.
-        }
-
-        String sql = "UPDATE user SET name = ? WHERE id = ?";
-        jdbcTemplate.update(sql, request.getName(), request.getId());
+        userService.updateUser(jdbcTemplate, request);
     }
 
     @DeleteMapping("/user")

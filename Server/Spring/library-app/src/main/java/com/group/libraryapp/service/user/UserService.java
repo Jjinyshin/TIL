@@ -6,12 +6,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserService {
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
 
-    public void updateUser (JdbcTemplate jdbcTemplate, UserUpdateRequest request) {
-        if (userRepository.isUserNotExist(jdbcTemplate, request.getId())) {
+    public UserService(JdbcTemplate jdbcTemplate) {
+        userRepository = new UserRepository(jdbcTemplate);
+    }
+
+    public void updateUser (UserUpdateRequest request) {
+        if (userRepository.isUserNotExist(request.getId())) {
             throw new IllegalArgumentException(); // 500 error 반환.
         }
-        userRepository.updateUserName(jdbcTemplate, request.getName(), request.getId());
+        userRepository.updateUserName(request.getName(), request.getId());
     }
 }

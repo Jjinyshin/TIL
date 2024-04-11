@@ -2,7 +2,6 @@ package com.group.libraryapp.service.book;
 
 import com.group.libraryapp.domain.book.Book;
 import com.group.libraryapp.domain.book.BookRepository;
-import com.group.libraryapp.domain.loan.Loan;
 import com.group.libraryapp.domain.loan.LoanRepository;
 import com.group.libraryapp.domain.user.User;
 import com.group.libraryapp.domain.user.UserRepository;
@@ -10,6 +9,7 @@ import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory;
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistoryRepository;
 import com.group.libraryapp.dto.book.request.BookCreateRequest;
 import com.group.libraryapp.dto.book.request.BookLoanRequest;
+import com.group.libraryapp.dto.book.request.BookReturnRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +53,24 @@ public class BookService {
         userLoanHistoryRepository.save(new UserLoanHistory(user.getId(), book.getName()));
 
 //        loanRepository.save(new Loan(request.getUserName(), request.getBookName())); // 처음에 내가 구현한 방식
+    }
+
+    @Transactional
+    public void returnBook(BookReturnRequest request) {
+
+        User user = userRepository.findByName(request.getUserName());
+
+        UserLoanHistory history = userLoanHistoryRepository.findByUserIdAndBookName(user.getId(), request.getBookName())
+                .orElseThrow(IllegalAccessError::new);
+
+        history.doReturn();
+
+        // => 나는 책 이름만을 가지고 대출기록 정보를 찾았는데, 이렇게 하면 서로 다른 사람이 똑같은 제목의 책을 빌린 경우도 있을 수 있으므로, userId와 bookName을 함께 이용해서 대출기록 정보를 찾아야 한다.
+        //  대출기록 정보를 가져온다.
+        // isReturn 속성을 true로 변경한다.
+//        UserLoanHistory userLoanHistory = userLoanHistoryRepository.findByBookName(request.getBookName())
+//                .orElseThrow(IllegalAccessError::new);
+//
+//        userLoanHistory.updateIsReturn();
     }
 }

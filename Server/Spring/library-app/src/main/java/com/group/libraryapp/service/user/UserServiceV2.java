@@ -38,7 +38,8 @@ public class UserServiceV2 {
                 .orElseThrow(IllegalArgumentException::new);
 
         user.updateName(request.getName());
-        userRepository.save(user);
+        // 별도로 save를 해주지 않아도 영속성 컨텍스트가 변경을 감지함.
+//        userRepository.save(user);
     }
 
     @Transactional

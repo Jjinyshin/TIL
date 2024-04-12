@@ -1,5 +1,7 @@
 package com.group.libraryapp.domain.user.loanhistory;
 
+import com.group.libraryapp.domain.user.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,15 +12,16 @@ public class UserLoanHistory {
     private Long id = null;
 
     @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     @Column(nullable = false)
     private String bookName;
 
     private boolean isReturn;
 
-    public UserLoanHistory(Long userId, String bookName) {
-        this.userId = userId;
+    public UserLoanHistory(User user, String bookName) {
+        this.user = user;
         this.bookName = bookName;
         this.isReturn = false;
     }

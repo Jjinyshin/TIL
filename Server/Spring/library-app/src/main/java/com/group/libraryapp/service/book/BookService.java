@@ -50,7 +50,7 @@ public class BookService {
         // 4. 유저 정보를 가져온다.
         User user = userRepository.findByName(request.getUserName());
         // 5. 유저 정보와 책 정보를 기반으로 UserLoanHistory를 저장한다.
-        userLoanHistoryRepository.save(new UserLoanHistory(user.getId(), book.getName()));
+        userLoanHistoryRepository.save(new UserLoanHistory(user, book.getName()));
 
 //        loanRepository.save(new Loan(request.getUserName(), request.getBookName())); // 처음에 내가 구현한 방식
     }
